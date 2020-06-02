@@ -76,7 +76,7 @@ from os import path
 # My Config file creater module
 import ConfigFile
 
-def sendEmail2():
+def sendEmail2(title):
     try:
 
         #Global Variables
@@ -116,7 +116,7 @@ def sendEmail2():
             file.close()
 
         #Function to send email
-        def sendEmailFunction():
+        def sendEmailFunction(title):
             print("Starting to SEND EMAIL Function")
             # Declaring config parser
             config = ConfigParser()
@@ -145,7 +145,7 @@ def sendEmail2():
             message["To"] = config.get('database', 'to email')
 
             #Body of the Text
-            text = config.get('DEFAULTS','Email Body').format(hostname, hostIP,host_username, host_platform, hostUsed, previousIP, currentPublicIP)
+            text = config.get('DEFAULTS','Email Body').format(title,hostname, hostIP,host_username, host_platform, hostUsed, previousIP, currentPublicIP)
 
             #Adding the body to the headers and message field.
             part1 = MIMEText(text, "plain")
@@ -262,7 +262,7 @@ def sendEmail2():
             #Updating User with Info
             print("Created your LatestPublicIP file with this IP in it: {}".format(currentPublicIP))
             #Add function to notify when file and IP initially recieved.
-            sendEmailFunction()
+            sendEmailFunction(title)
         #Run the rest of the program.
         else:
             # Getting previously stored IP from the file
@@ -272,8 +272,8 @@ def sendEmail2():
             # If the same then stoping program
             # If Different then overwriting and sending notification.
             if previousIP == currentPublicIP:
-                print("Your Public IP has not changed.\nIt is still this: {}".format(currentPublicIP))
-                sendEmailFunction()
+                print("Your Public IP has not changed.\nIt is still this: {}\n \n".format(currentPublicIP))
+                sendEmailFunction(title)
             elif previousIP != currentPublicIP:
                 #Notifiying user that Ip is different and writing to file.
                 print("Your Public IP is different: \n    Old: {}\n    New: {} \nAdding new IP to file".format(previousIP,
@@ -281,12 +281,12 @@ def sendEmail2():
                 #Writing IP to the file with created function.
                 writeIPToFile()
                 #Sending an email to user with new IP:
-                sendEmailFunction()
+                sendEmailFunction(title)
             else:
 
                 #Eventually add try/catch statements.
                 print("Some Error Happened, Try again.")
-                sendEmailFunction()
+                sendEmailFunction(title)
 
         #Staying open till user hits enter
         #input("\n-------------------------------------------------------\nThank You for using GetPublicIP by K&M Inc\nPress Enter to exit program.")

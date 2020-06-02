@@ -1,0 +1,2 @@
+CMD in The SysInternals.pwy Directory
+>pyinstaller --onefile --windowed --icon=icon.ico SysInternals.pyw

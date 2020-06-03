@@ -21,6 +21,7 @@ from getpass import getpass
 import base64
 import os
 import platform
+import SysInternals
 
 #Declaring config file.
 host_name = socket.gethostname()
@@ -86,7 +87,7 @@ try:
         #Writing congiurations to file.
         with open(logDir + '\config.ini','w') as configfile:
             config.write(configfile)
-            print("Wrote to config file. ")
+            SysInternals.sendToLog("Config File writted to and created")
 
 except Exception as error:
     print("ConfigFile could not be finished: {}".format(error))

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['SysInternals.pyw'],
-             pathex=['C:\\Users\\14175\\PycharmProjects\\Keylogger'],
+             pathex=['C:\\Users\\14175\\PycharmProjects\\OnGitHub\\IntruderDetectorKey'],
              binaries=[],
              datas=[],
              hiddenimports=[],

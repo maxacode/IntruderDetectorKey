@@ -67,17 +67,17 @@ try:
         database['First Run'] = 'True'
         database['5min Email'] = 'True'
         database['30min Email'] = 'True'
-        database['Send Email To'] = 'max@417max.com'
-        database['Sending Email'] = 'email_srvr@417max.com'
+        database['Send Email To'] = 
+        database['Sending Email'] = 
         #Getting input from user for SMTP Auth Pass - Secure entry and Base64 Encoding for storage.
         #Gets the password twice and makes sure they are the same string. If not loop repeats.
 
         emailPass = 'HelloThisIsAnEmailServer'
         #Done with Password
-        database['SMTP Server'] = 'mail.417max.com'
+        database['SMTP Server'] = 
         database['SMTP Server Port'] = '465'
-        database['From Email'] = 'email_srvr@417max.com'
-        database['To Email'] = 'max@417max.com'
+        database['From Email'] =  
+        database['To Email'] =  
 
         database['IPv4 API #1'] = 'https://v4.ident.me/'
         database['IPv4 API #2'] = 'https://icanhazip.com/'
